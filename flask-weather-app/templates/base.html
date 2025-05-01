@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet"> <!-- Added 500 weight -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    {% block head %}{% endblock %}
+    <!-- Chart.js CDN (Make sure it's here) -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+     <!-- Leaflet CSS (Move here for better organization) -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    <title>{% block title %}WeatherWise App{% endblock %}</title> <!-- Default Title -->
+</head>
+<body class="{% block body_class %}{% endblock %}"> <!-- Add body class block -->
+    <nav class="navbar">
+        <div class="nav-container"> <!-- Use specific class -->
+             <a href="{{ url_for('index') }}" class="nav-brand">WeatherWise</a> <!-- Changed name -->
+             <ul class="nav-links">
+                {% if current_user.is_authenticated %}
+                    <li><span>Hi, {{ current_user.name }}!</span></li>
+                    <li><a href="{{ url_for('logout') }}">Logout</a></li>
+                {% else %}
+                    <li><a href="{{ url_for('login') }}">Login</a></li>
+                    <li><a href="{{ url_for('register') }}">Register</a></li>
+                {% endif %}
+             </ul>
+        </div>
+    </nav>
+
+    <!-- Flash Messages Container -->
+    <div class="flash-container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">
+                        {{ message }}
+                        <span class="close-alert" onclick="this.parentElement.style.display='none';">×</span>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="container main-content">
+        {% block content %}
+        <!-- Content from child templates (like index.html) goes here -->
+        {% endblock %}
+    </div>
+
+    <footer>
+        <div class="container">
+             <p>© {{ now.year }} WeatherWise App. Weather data by OpenWeatherMap.</p> <!-- Updated footer text, use now.year -->
+        </div>
+    </footer>
+
+    <!-- Scripts Block -->
+    {% block scripts %}
+        <!-- Leaflet JS (Keep at end) -->
+        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+        <!-- API Key/Base URL Setup -->
+        <script>
+            // Pass Flask variables to JavaScript
+            const MAP_API_KEY = "{{ map_api_key }}";
+            const API_BASE_URL = "{{ url_for('api_weather_bundle') }}".replace('/weather_bundle', ''); // Get base API path dynamically
+        </script>
+        <!-- Your Custom JavaScript -->
+        <script src="{{ url_for('static', filename='script.js') }}"></script>
+    {% endblock %}
+
+</body>
+</html>
