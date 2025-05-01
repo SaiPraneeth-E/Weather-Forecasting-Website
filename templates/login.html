@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}Login - WeatherWise{% endblock %}
+
+{% block body_class %}login-page{% endblock %} <!-- Class for login background/styling -->
+
+{% block head %}
+    <!-- Login page specific head elements if needed -->
+{% endblock %}
+
+{% block content %}
+<div class="auth-form"> <!-- Use the styling class for auth forms -->
+    <h2>Welcome Back!</h2>
+    {# Display flashed messages specifically for login errors if needed, though base.html handles general ones #}
+    {% with messages = get_flashed_messages(with_categories=true, category_filter=['danger']) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-danger">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <form method="POST" action="{{ url_for('login') }}" novalidate> {# Added novalidate to rely on server-side validation #}
+        <div class="form-group">
+            <label for="email">Email address</label>
+            {# Preserve email input on failed attempt #}
+            <input type="email" id="email" name="email" required placeholder="your@email.com" value="{{ request.form.email if request and request.form else '' }}">
+        </div>
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required placeholder="••••••••">
+        </div>
+         <div class="form-group form-check">
+            <input type="checkbox" id="remember" name="remember" value="on"> {# Ensure checkbox has a value #}
+            <label for="remember">Remember Me</label>
+        </div>
+        <button type="submit" class="btn btn-primary">Login</button> <!-- Use primary button style -->
+    </form>
+    <p class="form-switch">
+        Need an account? <a href="{{ url_for('register') }}">Register here</a>
+    </p>
+</div>
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }} {# Optional: Include scripts from base if needed, but login usually doesn't need dashboard scripts #}
+{% endblock %}

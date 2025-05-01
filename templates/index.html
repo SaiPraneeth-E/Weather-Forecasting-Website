@@ -1,0 +1,174 @@
+{% extends "base.html" %}
+
+{% block title %}Weather Dashboard - WeatherWise{% endblock %}
+
+{% block body_class %}dashboard-page{% endblock %} <!-- Removed dark-theme, handled by :root -->
+
+{% block head %}
+    <!-- Font Awesome for icons (Specific to dashboard) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+{% endblock %}
+
+{% block content %}
+    <div class="dashboard-header">
+        <!-- Search remains similar -->
+        <div class="search-box">
+            <i class="fas fa-map-marker-alt search-icon"></i>
+            <input type="text" id="cityInput" placeholder="Enter City Name...">
+            <button id="searchBtn" class="btn btn-secondary"><i class="fas fa-search"></i> Search</button>
+             <!-- Optional: Add Current Location button here if desired -->
+             <!-- <button id="currentLocBtn" class="btn btn-primary"><i class="fas fa-crosshairs"></i> Current Location</button> -->
+        </div>
+    </div>
+
+    <div id="loader" class="loader"></div> <!-- No inline style needed -->
+    <div id="errorMessage" class="error-message"></div> <!-- No inline style needed -->
+
+    <!-- WEATHER RESULTS CONTAINER -->
+    <div id="weather-results" style="display: none;"> <!-- Keep hidden initially -->
+        <h3 id="locationName" class="location-title">--</h3>
+
+        <div class="main-weather-grid">
+
+            <!-- === Left Column: Current Weather & 5-Day Forecast === -->
+            <div class="left-column">
+                <!-- Now Card -->
+                <div class="card now-card">
+                    <p class="now-label">Now</p>
+                    <div class="now-main">
+                        <span id="currentTemp" class="now-temp">--°C</span>
+                        <img id="currentIcon" src="https://openweathermap.org/img/wn/01d@2x.png" alt="--" class="now-icon">
+                    </div>
+                    <p id="currentDesc" class="now-desc">--</p>
+                    <hr class="card-divider">
+                    <p class="now-detail"><i class="far fa-calendar-alt"></i> <span id="currentDate">--</span></p>
+                </div>
+
+                <!-- 5-Day Forecast Card -->
+                <div class="card forecast-5day-card">
+                    <h4><i class="far fa-calendar-alt"></i> 5 Days Forecast</h4>
+                    <ul id="dailyForecastList" class="daily-forecast-list">
+                        <!-- Daily forecast list items injected by JS -->
+                        <!-- Placeholder structure (optional, JS clears it) -->
+                        <li class="forecast-list-item placeholder"><span>--</span> <img src="https://openweathermap.org/img/wn/01d.png" alt="-"> <span>--°/--°C</span></li>
+                        <li class="forecast-list-item placeholder"><span>--</span> <img src="https://openweathermap.org/img/wn/01d.png" alt="-"> <span>--°/--°C</span></li>
+                        <li class="forecast-list-item placeholder"><span>--</span> <img src="https://openweathermap.org/img/wn/01d.png" alt="-"> <span>--°/--°C</span></li>
+                        <li class="forecast-list-item placeholder"><span>--</span> <img src="https://openweathermap.org/img/wn/01d.png" alt="-"> <span>--°/--°C</span></li>
+                        <li class="forecast-list-item placeholder"><span>--</span> <img src="https://openweathermap.org/img/wn/01d.png" alt="-"> <span>--°/--°C</span></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- === Right Column: Highlights, Chart, Map === -->
+            <div class="right-column">
+                <h4>Today's Highlights</h4>
+                <!-- Highlights Grid -->
+                <div class="highlights-grid">
+                    <!-- AQI -->
+                    <div class="card highlight-card aqi-card">
+                        <h5>Air Quality Index</h5>
+                        <div class="aqi-main">
+                             <i class="fas fa-wind aqi-icon"></i>
+                             <div class="aqi-info">
+                                 <span id="aqiValue" class="aqi-value">--</span>
+                                 <span id="aqiDesc" class="aqi-desc">--</span>
+                             </div>
+                        </div>
+                        <div id="airComponents" class="air-components">
+                            <!-- Compact Air components injected by JS -->
+                            <span>PM2.5: --</span> <span>SO2: --</span> <span>NO2: --</span> <span>O3: --</span>
+                        </div>
+                    </div>
+                    <!-- Sunrise/Sunset -->
+                    <div class="card highlight-card sunrise-sunset-card">
+                         <h5>Sunrise & Sunset</h5>
+                         <div class="sun-item">
+                              <i class="fas fa-sun sun-icon"></i> <!-- Generic sun icon -->
+                              <div class="sun-info">
+                                   <span>Sunrise</span>
+                                   <span id="currentSunrise" class="sun-time">--:--</span>
+                              </div>
+                         </div>
+                          <div class="sun-item">
+                              <i class="fas fa-moon sun-icon"></i> <!-- Moon icon for sunset -->
+                              <div class="sun-info">
+                                   <span>Sunset</span>
+                                   <span id="currentSunset" class="sun-time">--:--</span>
+                              </div>
+                         </div>
+                    </div>
+                    <!-- Humidity -->
+                    <div class="card highlight-card">
+                        <h5>Humidity</h5>
+                        <div class="highlight-content">
+                            <i class="fas fa-tint highlight-icon"></i>
+                            <span id="detailHumidity" class="highlight-value">-- %</span>
+                        </div>
+                    </div>
+                    <!-- Pressure -->
+                    <div class="card highlight-card">
+                        <h5>Pressure</h5>
+                        <div class="highlight-content">
+                            <i class="fas fa-tachometer-alt highlight-icon"></i>
+                            <span id="detailPressure" class="highlight-value">-- hPa</span>
+                        </div>
+                    </div>
+                    <!-- Visibility -->
+                    <div class="card highlight-card">
+                        <h5>Visibility</h5>
+                        <div class="highlight-content">
+                            <i class="fas fa-eye highlight-icon"></i>
+                            <span id="detailVisibility" class="highlight-value">-- km</span>
+                        </div>
+                    </div>
+                    <!-- Wind -->
+                    <div class="card highlight-card">
+                         <h5>Wind Speed</h5>
+                         <div class="highlight-content">
+                            <i class="fas fa-wind highlight-icon"></i>
+                            <span id="detailWind" class="highlight-value">-- km/h</span>
+                         </div>
+                    </div>
+                     <!-- Feels Like -->
+                     <div class="card highlight-card">
+                        <h5>Feels Like</h5>
+                        <div class="highlight-content">
+                            <i class="fas fa-temperature-high highlight-icon"></i>
+                            <span id="currentFeelsLike" class="highlight-value">--°C</span>
+                        </div>
+                    </div>
+                </div> <!-- End highlights-grid -->
+
+                 <!-- Hourly Temperature Chart Card -->
+                 <div class="card chart-card">
+                    <h4><i class="fas fa-chart-line"></i> Hourly Temperature (24h)</h4>
+                    <canvas id="hourlyTempChart"></canvas> <!-- Canvas for Chart.js -->
+                 </div>
+
+                 <!-- Weather Map Card -->
+                 <div class="card map-card">
+                    <h4><i class="fas fa-map-marked-alt"></i> Weather Map</h4>
+                     <div class="map-controls">
+                        <label for="mapLayerSelect">Layer:</label>
+                        <select id="mapLayerSelect">
+                            <option value="temp_new">Temperature</option>
+                            <option value="precipitation_new">Precipitation</option>
+                            <option value="clouds_new">Clouds</option>
+                            <option value="wind_new">Wind Speed</option>
+                            <option value="pressure_new">Pressure</option>
+                        </select>
+                    </div>
+                    <div id="map"></div> <!-- Div for Leaflet map -->
+                 </div>
+
+            </div> <!-- End right-column -->
+
+        </div> <!-- End main-weather-grid -->
+    </div> <!-- End weather-results -->
+
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }} {# Include scripts from base.html #}
+    {# Add index-specific scripts here if needed in the future #}
+{% endblock %}
