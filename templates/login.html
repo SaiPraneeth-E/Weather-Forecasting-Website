@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Neural Uplink - Login{% endblock %}
+{% block title %}ForecastX // Uplink - Login{% endblock %}
 
 {% block body_class %}auth-page{% endblock %}
 
@@ -35,7 +35,7 @@
         content: "";
         position: absolute;
         top: 0; left: 0; width: 100%; height: 3px;
-        background: linear-gradient(90deg, var(--neon-blue, #00f2ff), var(--neon-purple, #bc13fe));
+        background: linear-gradient(90deg, #00f2ff, #bc13fe);
     }
 
     .auth-form h2 {
@@ -167,7 +167,7 @@
 
 {% block content %}
 <div class="auth-form">
-    <h2>Neural_Login</h2>
+    <h2>ForecastX_Login</h2>
     <p class="auth-subtitle">ESTABLISHING_SECURE_UPLINK...</p>
 
     {# Error Handling #}
@@ -212,7 +212,6 @@
 {% block scripts %}
     {{ super() }}
     <script>
-        // Optional: Add a flicker effect to the button on load
         document.addEventListener('DOMContentLoaded', () => {
             const btn = document.querySelector('.btn-cyber');
             btn.style.opacity = '0';
