@@ -238,7 +238,9 @@ def logout():
 @app.route('/api/weather_bundle', methods=['GET'])
 @login_required
 def api_weather_bundle():
-    city = request.args.get('city') if city:     city = city.strip()
+    city = request.args.get('city')
+    if city:
+     city = city.strip()
     if not city:
         return jsonify({"error": "City parameter is required"}), 400
 
@@ -296,6 +298,7 @@ with app.app_context():
 # --- Run the App ---
 if __name__ == '__main__':
     app.run()
+
 
 
 
