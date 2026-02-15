@@ -15,7 +15,7 @@ API to deliver accurate and up-to-date weather information.
 
 ## 🚀 Live Demo
 
-> (Add your deployed link here -- e.g., Render / Vercel / Railway)
+> [Live Link](https://forecast-x-jru6.onrender.com/)
 
 ------------------------------------------------------------------------
 
