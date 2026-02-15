@@ -7,8 +7,9 @@ import requests
 import datetime # Keep this import
 
 # --- Configuration ---
-OPENWEATHER_API_KEY = "your key" # Your Key
-SECRET_KEY = "your_very_secret_flask_key_change_me_again" # Change this!
+OPENWEATHER_API_KEY = os.environ.get("OPENWEATHER_API_KEY")
+SECRET_KEY = os.environ.get("SECRET_KEY")
+ # Change this!
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 instance_path = os.path.join(basedir, 'instance')
@@ -299,4 +300,5 @@ if __name__ == '__main__':
     # Consider using environment variables for debug and port
 
     app.run(debug=os.environ.get('FLASK_DEBUG', True), port=int(os.environ.get('PORT', 5000)))
+
 
