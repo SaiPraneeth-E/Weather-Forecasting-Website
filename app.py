@@ -294,6 +294,9 @@ with app.app_context():
 
 # --- Run the App ---
 if __name__ == '__main__':
+    app.run(debug=False)
+
     # Consider using environment variables for debug and port
 
     app.run(debug=os.environ.get('FLASK_DEBUG', True), port=int(os.environ.get('PORT', 5000)))
+
