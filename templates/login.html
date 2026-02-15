@@ -1,47 +1,225 @@
 {% extends "base.html" %}
 
-{% block title %}Login - WeatherWise{% endblock %}
+{% block title %}Neural Uplink - Login{% endblock %}
 
-{% block body_class %}login-page{% endblock %} <!-- Class for login background/styling -->
+{% block body_class %}auth-page{% endblock %}
 
 {% block head %}
-    <!-- Login page specific head elements if needed -->
+<style>
+    /* Auth Page Specific Background */
+    body.auth-page {
+        background: radial-gradient(circle at center, #0a0a1f 0%, #020205 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        font-family: 'Rajdhani', sans-serif;
+    }
+
+    /* Glassmorphic Auth Card */
+    .auth-form {
+        background: rgba(10, 10, 18, 0.9);
+        backdrop-filter: blur(15px);
+        border: 1px solid rgba(0, 242, 255, 0.2);
+        border-radius: 20px;
+        padding: 40px;
+        width: 100%;
+        max-width: 450px;
+        box-shadow: 0 0 30px rgba(0, 242, 255, 0.1);
+        position: relative;
+        overflow: hidden;
+    }
+
+    /* Neon Accent Line at top */
+    .auth-form::before {
+        content: "";
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 3px;
+        background: linear-gradient(90deg, var(--neon-blue, #00f2ff), var(--neon-purple, #bc13fe));
+    }
+
+    .auth-form h2 {
+        font-family: 'Orbitron', sans-serif;
+        text-align: center;
+        color: #fff;
+        letter-spacing: 3px;
+        margin-bottom: 10px;
+        text-transform: uppercase;
+        font-size: 1.5rem;
+    }
+
+    .auth-subtitle {
+        text-align: center;
+        color: #707080;
+        font-family: 'Orbitron';
+        font-size: 0.7rem;
+        margin-bottom: 30px;
+        letter-spacing: 2px;
+    }
+
+    /* Styled Form Groups */
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        display: block;
+        color: #00f2ff;
+        font-family: 'Orbitron';
+        font-size: 0.7rem;
+        margin-bottom: 8px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .form-group input[type="email"],
+    .form-group input[type="password"] {
+        width: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 8px;
+        padding: 12px 15px;
+        color: #fff;
+        font-family: 'Rajdhani';
+        font-size: 1.1rem;
+        outline: none;
+        transition: 0.3s;
+    }
+
+    .form-group input:focus {
+        border-color: #00f2ff;
+        box-shadow: 0 0 10px rgba(0, 242, 255, 0.2);
+    }
+
+    /* Checkbox Styling */
+    .form-check {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: #707080;
+        font-size: 0.9rem;
+        margin-bottom: 25px;
+        cursor: pointer;
+    }
+
+    .form-check input {
+        accent-color: #bc13fe;
+        width: 16px;
+        height: 16px;
+    }
+
+    /* Cyber Button */
+    .btn-cyber {
+        width: 100%;
+        background: transparent;
+        border: 1px solid #00f2ff;
+        color: #00f2ff;
+        padding: 12px;
+        font-family: 'Orbitron';
+        font-size: 0.9rem;
+        letter-spacing: 2px;
+        cursor: pointer;
+        transition: 0.3s;
+        text-transform: uppercase;
+        margin-top: 10px;
+    }
+
+    .btn-cyber:hover {
+        background: #00f2ff;
+        color: #000;
+        box-shadow: 0 0 20px rgba(0, 242, 255, 0.5);
+    }
+
+    /* Switch link */
+    .form-switch {
+        text-align: center;
+        margin-top: 25px;
+        color: #707080;
+        font-size: 0.9rem;
+    }
+
+    .form-switch a {
+        color: #bc13fe;
+        text-decoration: none;
+        font-weight: bold;
+        transition: 0.3s;
+    }
+
+    .form-switch a:hover {
+        color: #ff0055;
+        text-shadow: 0 0 10px rgba(255, 0, 85, 0.3);
+    }
+
+    /* Error Alerts */
+    .alert {
+        background: rgba(255, 0, 85, 0.1);
+        border: 1px solid #ff0055;
+        color: #ff0055;
+        padding: 10px;
+        border-radius: 8px;
+        font-size: 0.8rem;
+        font-family: 'Orbitron';
+        margin-bottom: 20px;
+        text-align: center;
+    }
+</style>
 {% endblock %}
 
 {% block content %}
-<div class="auth-form"> <!-- Use the styling class for auth forms -->
-    <h2>Welcome Back!</h2>
-    {# Display flashed messages specifically for login errors if needed, though base.html handles general ones #}
+<div class="auth-form">
+    <h2>Neural_Login</h2>
+    <p class="auth-subtitle">ESTABLISHING_SECURE_UPLINK...</p>
+
+    {# Error Handling #}
     {% with messages = get_flashed_messages(with_categories=true, category_filter=['danger']) %}
         {% if messages %}
             {% for category, message in messages %}
-                <div class="alert alert-danger">{{ message }}</div>
+                <div class="alert alert-danger">
+                    <i class="fas fa-exclamation-triangle"></i> {{ message }}
+                </div>
             {% endfor %}
         {% endif %}
     {% endwith %}
 
-    <form method="POST" action="{{ url_for('login') }}" novalidate> {# Added novalidate to rely on server-side validation #}
+    <form method="POST" action="{{ url_for('login') }}" novalidate>
         <div class="form-group">
-            <label for="email">Email address</label>
-            {# Preserve email input on failed attempt #}
-            <input type="email" id="email" name="email" required placeholder="your@email.com" value="{{ request.form.email if request and request.form else '' }}">
+            <label for="email">User_ID (Email)</label>
+            <input type="email" id="email" name="email" required 
+                   placeholder="IDENTITY@CORE.NET" 
+                   value="{{ request.form.email if request and request.form else '' }}">
         </div>
+
         <div class="form-group">
-            <label for="password">Password</label>
-            <input type="password" id="password" name="password" required placeholder="••••••••">
+            <label for="password">Access_Key (Password)</label>
+            <input type="password" id="password" name="password" required 
+                   placeholder="••••••••">
         </div>
-         <div class="form-group form-check">
-            <input type="checkbox" id="remember" name="remember" value="on"> {# Ensure checkbox has a value #}
-            <label for="remember">Remember Me</label>
+
+         <div class="form-check">
+            <input type="checkbox" id="remember" name="remember" value="on">
+            <label for="remember" style="margin:0; color: inherit; font-family: 'Rajdhani';">Maintain Session Connection</label>
         </div>
-        <button type="submit" class="btn btn-primary">Login</button> <!-- Use primary button style -->
+
+        <button type="submit" class="btn-cyber">Authorize</button>
     </form>
+
     <p class="form-switch">
-        Need an account? <a href="{{ url_for('register') }}">Register here</a>
+        New Entity? <a href="{{ url_for('register') }}">Register_Identity</a>
     </p>
 </div>
 {% endblock %}
 
 {% block scripts %}
-    {{ super() }} {# Optional: Include scripts from base if needed, but login usually doesn't need dashboard scripts #}
+    {{ super() }}
+    <script>
+        // Optional: Add a flicker effect to the button on load
+        document.addEventListener('DOMContentLoaded', () => {
+            const btn = document.querySelector('.btn-cyber');
+            btn.style.opacity = '0';
+            setTimeout(() => {
+                btn.style.transition = 'opacity 1s';
+                btn.style.opacity = '1';
+            }, 500);
+        });
+    </script>
 {% endblock %}
