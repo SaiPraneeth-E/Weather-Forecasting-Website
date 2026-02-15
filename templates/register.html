@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Neural Identity - Initialize{% endblock %}
+{% block title %}ForecastX // Identity - Initialize{% endblock %}
 
 {% block body_class %}auth-page{% endblock %}
 
@@ -30,7 +30,7 @@
         overflow: hidden;
     }
 
-    /* Neon Accent Line (Purple for Register to distinguish from Blue Login) */
+    /* Neon Accent Line (Purple for Register) */
     .auth-form::before {
         content: "";
         position: absolute;
@@ -74,7 +74,7 @@
 
     .form-group label {
         display: block;
-        color: #bc13fe; /* Purple accent for registration */
+        color: #bc13fe; 
         font-family: 'Orbitron';
         font-size: 0.65rem;
         margin-bottom: 8px;
@@ -100,7 +100,7 @@
         box-shadow: 0 0 10px rgba(188, 19, 254, 0.2);
     }
 
-    /* Cyber Button - Registration Red/Purple Theme */
+    /* Cyber Button */
     .btn-cyber {
         width: 100%;
         background: transparent;
@@ -142,7 +142,6 @@
         text-shadow: 0 0 10px rgba(0, 242, 255, 0.5);
     }
 
-    /* Mobile view for grid */
     @media (max-width: 480px) {
         .form-grid { grid-template-columns: 1fr; }
         .full-width { grid-column: span 1; }
@@ -152,8 +151,8 @@
 
 {% block content %}
 <div class="auth-form">
-    <h2>Initialize_Identity</h2>
-    <p class="auth-subtitle">CREATING_NEW_NEURAL_UPLINK...</p>
+    <h2>ForecastX_Registration</h2>
+    <p class="auth-subtitle">INITIALIZING_SECURE_PROFILE...</p>
 
     <form method="POST" action="{{ url_for('register') }}">
         <div class="form-grid">
@@ -190,7 +189,6 @@
 {% block scripts %}
     {{ super() }}
     <script>
-        // Subtle scanline flicker effect on button
         document.addEventListener('DOMContentLoaded', () => {
             const btn = document.querySelector('.btn-cyber');
             setInterval(() => {
