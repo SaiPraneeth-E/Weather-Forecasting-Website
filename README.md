@@ -43,8 +43,7 @@ API to deliver accurate and up-to-date weather information.
 
 ### 🔹 Backend
 
--   Node.js
--   Express.js
+-   Flask (Python)
 
 ### 🔹 API
 
